@@ -1,0 +1,8 @@
+{   
+    "rave_server"   : "",
+    // The host server url for Rave Evaluator 
+    // e.g sinsv-13
+
+    "rave_port"     : 8080,
+    // XML-RPC port for studio server
+}

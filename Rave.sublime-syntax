@@ -1,0 +1,151 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/3/syntax.html
+# Chen <zhaochen.sg@gmail.com>
+# Mar 2017
+# Version 0.3
+
+# Apr 2017
+# improve "goto definition" added data type captures 
+# more reserved words and built-in functions
+
+name: RAVE
+scope: source.rave
+first_line_match: '-\*- crc -\*-'
+variables:
+  iden: '\b[[a-zA-Z0-9]_]*\b'
+  data_type: '(Int|int|String|string|Reltime|reltime|Abstime|abstime|Bool|bool)'
+
+contexts:
+  main:    
+    # Variables definition
+    - match: '(^)(%)({{iden}})(%)'
+      captures:
+        2: entity.other.attribute-name.rave
+        3: entity.name.function.rave
+        4: entity.other.attribute-name.rave
+
+    - match: '(({{data_type}})|(export|redefine))(\s*%)({{iden}})(%)'
+      captures:
+        2: storage.type.rave
+        4: keyword.control.rave
+        5: entity.other.attribute-name.rave
+        6: entity.name.function.rave
+        7: entity.other.attribute-name.rave
+
+    - match: '\b(rule|group|matrix|constraint|enum|set|iterator)\s*(\((on|off)\)\s*)?({{iden}})\b'
+      captures:
+        1: storage.type.rave
+        3: variable.parameter.rave
+        4: entity.name.function.rave
+    
+    - match: '^\btable\b'
+      scope: storage.type.rave
+      push:
+        - match: '->'
+          set:
+            - match: '(%)({{iden}})(%)'
+              captures:
+                1: entity.other.attribute-name.rave
+                2: entity.name.function.rave
+                3: entity.other.attribute-name.rave
+            - match: ';'
+              pop: true
+            - include: keyword
+
+        - include: parameter
+        - include: string
+        - include: keyword
+        - include: comment
+        - include: module
+
+    - include: parameter
+    - include: string
+    - include: keyword
+    - include: comment
+    - include: module
+
+  string:
+    # Strings begin and end with quotes, and use backslashes as an escape
+    # character
+    - match: '"'
+      scope: punctuation.definition.string.begin.rave
+      push: 
+      - meta_scope: string.quoted.double.rave
+      - match: '\\.'
+        scope: constant.character.escape.rave
+      - match: '"'
+        scope: punctuation.definition.string.end.rave
+        pop: true
+  
+  comment:
+    # Comments begin with a '/*' and finish with a '*/'
+
+    - match: '/\*'
+      scope: punctuation.definition.comment.rave
+      push:
+      - meta_scope: comment.line.rave
+      - match: '\*/'
+        pop: true
+
+  keyword:
+    - match: '\b(root|module|import|export|global|redefine|inherits|require)\b'
+      scope: keyword.control.import.rave
+
+    - match: '\b(is|legal|illegal|default|parameter|remark|planner|failtext|valid|external|cache|failobject)\b'
+      scope: keyword.control.rave
+
+    - match: '\b(if|else|then|let|where|while|tw_while|and|and2|or|or2|not|in)\b'
+      scope: keyword.control.rave
+
+    - match: '\b(partition|by|next|prev|first|last|earliest|latest|is_first|is_last|from|to|forwards|backwards|any|all|cat|count|min|max|nmin|nmax|sum|avg|abs|sqrt|mod|maxvalue|minvalue|max_penalty|min_penalty|concat|overlap|scale_time|format_(time|int)|time_of_(day|week)|round_(down|up)(_(week|month|year|offset))?|add_(weeks|months|years))\b'
+      scope: keyword.control.rave
+    
+    - match: '\b(accumulator|alias|transform|filter|booster_assertion|context|current_context|build|cost|severity|deadline|delta|durable|startdate|startday|enddate|endday|overshoot_max_limit|overshoot_min_limit)\b'
+      scope: keyword.control.rave
+    #String function
+    - match: '\b(locate|substr|length|msgr|msgx|string_to_int)\b'
+      scope: keyword.control.rave
+    #Rule function 
+    - match: '\b(total_rule_penalty|rule_on|rule_failure|rulefailure|current_rule_id)\b'
+      scope: keyword.control.rave
+    #Iterator and capi function
+    - match: '\b(index|times_index|interval_start|interval_end|foreach|capi_legs|capi_time)\b'
+      scope: keyword.control.rave
+    #Storage e.g rule group
+    - match: '\b(end|matrix|table|rule|constraint|group|enum|set|map|iterator|level|mat|Int|int|(S|s)tring|(R|r)eltime|(A|a)bstime|(B|b)ool|void|void_(int|string|reltime|abstime|bool))\b'
+      scope: storage.type.rave
+
+    #Boolean
+    - match: '\b(true|True|TRUE|false|False|FALSE)\b'
+      scope: constant.language.boolean.rave
+
+    # Numbers
+    - match: '\b(([0-9]+:[0-9]+)|(-?[0-9.]+))((Jan|jan|JAN|Feb|feb|FEB|Mar|mar|MAR|Apr|apr|APR|May|may|MAY|Jun|jun|JUN|Jul|jul|JUL|Aug|aug|AUG|Sep|sep|SEP|Oct|oct|OCT|Nov|nov|NOV|Dec|dec|DEC)[0-9]+)?\b'
+      scope: constant.numeric.rave
+    
+  module:
+    # Module
+    - match: '\b({{iden}}\.)'
+      scope: storage.type.rave
+
+    - match: '\b(leg|duty)(\()\b'
+      captures: 
+        1: storage.type.rave
+      push: 
+      - match: '\b(duty|trip|chain|current)\b'
+        scope: variable.parameter.rave
+      - match: '\)'
+        pop: true
+
+    - match: '\b(current|on|off)\b'
+      scope: variable.parameter.rave
+
+    - match: '\b({{iden}}\.)'
+      scope: storage.type.rave
+
+  parameter:
+      - match: '(\b{{data_type}}\s*)({{iden}})'
+        captures:
+          2: storage.type.rave
+          3: variable.parameter.rave

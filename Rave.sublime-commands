@@ -1,0 +1,20 @@
+[
+    {
+        "caption": "RAVE Evaluator: By selection",
+        "command": "evaluator"
+    },
+    {
+        "caption": "RAVE Evaluator: By expressions",
+        "command": "evaluator",
+        "args"   : { "by_exp": true }
+    },
+    {
+        "caption": "RAVE Evaluator: Update settings",
+        "command": "edit_settings",
+        "args":
+        {
+            "base_file": "${packages}/Rave/Rave.sublime-settings",
+            "default": "{\n\t$0\n}\n"
+        }
+    },
+]

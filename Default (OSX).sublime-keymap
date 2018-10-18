@@ -1,0 +1,4 @@
+[{
+    "keys": ["command+ctrl+e"], 
+    "command": "evaluator"
+}]
