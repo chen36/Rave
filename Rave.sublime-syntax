@@ -33,7 +33,7 @@ contexts:
         6: entity.name.function.rave
         7: entity.other.attribute-name.rave
 
-    - match: '\b(rule|group|matrix|constraint|enum|set|iterator)\s*(\((on|off)\)\s*)?({{iden}})\b'
+    - match: '\b(level|rule|group|matrix|constraint|enum|set|iterator)\s*(\((on|off)\)\s*)?({{iden}})\b'
       captures:
         1: storage.type.rave
         3: variable.parameter.rave
@@ -95,7 +95,7 @@ contexts:
     - match: '\b(is|legal|illegal|default|parameter|remark|planner|failtext|valid|external|cache|failobject)\b'
       scope: keyword.control.rave
 
-    - match: '\b(if|else|then|let|where|while|tw_while|and|and2|or|or2|not|in)\b'
+    - match: '\b(if|else|then|let|when|where|while|tw_while|and|and2|or|or2|not|in)\b'
       scope: keyword.control.rave
 
     - match: '\b(partition|by|next|prev|first|last|earliest|latest|is_first|is_last|from|to|forwards|backwards|any|all|cat|count|min|max|nmin|nmax|sum|avg|abs|sqrt|mod|maxvalue|minvalue|max_penalty|min_penalty|concat|overlap|scale_time|format_(time|int)|time_of_(day|week)|round_(down|up)(_(week|month|year|offset))?|add_(weeks|months|years))\b'
