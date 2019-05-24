@@ -3,21 +3,25 @@
 # See http://www.sublimetext.com/docs/3/syntax.html
 # Chen <zhaochen.sg@gmail.com>
 # Mar 2017
-# Version 0.3
+# Version 0.4
 
 # Apr 2017
-# improve "goto definition" added data type captures 
+# improve "goto definition" added data type captures
 # more reserved words and built-in functions
+
+# Sep 2018
+# Minor update
 
 name: RAVE
 scope: source.rave
 first_line_match: '-\*- crc -\*-'
+
 variables:
   iden: '\b[[a-zA-Z0-9]_]*\b'
   data_type: '(Int|int|String|string|Reltime|reltime|Abstime|abstime|Bool|bool)'
 
 contexts:
-  main:    
+  main:
     # Variables definition
     - match: '(^)(%)({{iden}})(%)'
       captures:
@@ -38,7 +42,7 @@ contexts:
         1: storage.type.rave
         3: variable.parameter.rave
         4: entity.name.function.rave
-    
+
     - match: '^\btable\b'
       scope: storage.type.rave
       push:
@@ -70,14 +74,14 @@ contexts:
     # character
     - match: '"'
       scope: punctuation.definition.string.begin.rave
-      push: 
+      push:
       - meta_scope: string.quoted.double.rave
       - match: '\\.'
         scope: constant.character.escape.rave
       - match: '"'
         scope: punctuation.definition.string.end.rave
         pop: true
-  
+
   comment:
     # Comments begin with a '/*' and finish with a '*/'
 
@@ -100,13 +104,13 @@ contexts:
 
     - match: '\b(partition|by|next|prev|first|last|earliest|latest|is_first|is_last|from|to|forwards|backwards|any|all|cat|count|min|max|nmin|nmax|sum|avg|abs|sqrt|mod|maxvalue|minvalue|max_penalty|min_penalty|concat|overlap|scale_time|format_(time|int)|time_of_(day|week)|round_(down|up)(_(week|month|year|offset))?|add_(weeks|months|years))\b'
       scope: keyword.control.rave
-    
+
     - match: '\b(accumulator|alias|transform|filter|booster_assertion|context|current_context|build|cost|severity|deadline|delta|durable|startdate|startday|enddate|endday|overshoot_max_limit|overshoot_min_limit)\b'
       scope: keyword.control.rave
     #String function
     - match: '\b(locate|substr|length|msgr|msgx|string_to_int)\b'
       scope: keyword.control.rave
-    #Rule function 
+    #Rule function
     - match: '\b(total_rule_penalty|rule_on|rule_failure|rulefailure|current_rule_id)\b'
       scope: keyword.control.rave
     #Iterator and capi function
@@ -123,16 +127,16 @@ contexts:
     # Numbers
     - match: '\b(([0-9]+:[0-9]+)|(-?[0-9.]+))((Jan|jan|JAN|Feb|feb|FEB|Mar|mar|MAR|Apr|apr|APR|May|may|MAY|Jun|jun|JUN|Jul|jul|JUL|Aug|aug|AUG|Sep|sep|SEP|Oct|oct|OCT|Nov|nov|NOV|Dec|dec|DEC)[0-9]+)?\b'
       scope: constant.numeric.rave
-    
+
   module:
     # Module
     - match: '\b({{iden}}\.)'
       scope: storage.type.rave
 
     - match: '\b(leg|duty)(\()\b'
-      captures: 
+      captures:
         1: storage.type.rave
-      push: 
+      push:
       - match: '\b(duty|trip|chain|current)\b'
         scope: variable.parameter.rave
       - match: '\)'
